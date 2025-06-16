@@ -1,0 +1,524 @@
+openapi: 3.0.0
+servers:
+  - description: Cluster Endpoint
+    url: /ak-ambulance-counseling-api
+info:
+  description: Ambulance Counseling Project API
+  version: "1.0.0"
+  title: Waiting List Api
+  contact:
+    email: xkoricansky@stuba.sk
+  license:
+    name: CC BY 4.0
+    url: "https://creativecommons.org/licenses/by/4.0/"
+tags:
+- name: ambulanceCounseling
+  description: Ambulance Counseling API
+paths:
+  /questions:
+    get:
+      tags:
+        - ambulanceCounseling
+      summary: Get all question summaries
+      description: Retrieve a list of all question summaries submitted by patients
+      operationId: getQuestions
+      responses:
+        '200':
+          description: A list of questions submitted by patients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Question'
+              examples:
+                response:
+                  $ref: "#/components/examples/QuestionListExample"
+  /questions/new:
+    post:
+      tags:
+        - ambulanceCounseling
+      summary: Create a new question
+      operationId: createQuestion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+            examples:
+              request:
+                $ref: "#/components/examples/QuestionExample"
+      responses:
+        '201':
+          description: Question created successfully
+        '400':
+          description: Bad request, invalid input data
+        '401':
+          description: Unauthorized, user not authenticated
+  /questions/{id}:
+    get:
+      tags:
+        - ambulanceCounseling
+      summary: Get a specific question by ID
+      operationId: getQuestionById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A specific question submitted by a patient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+              examples:
+                response:
+                  $ref: "#/components/examples/QuestionExample"
+        '404':
+          description: Question not found
+  /questions/{id}/replies:
+    get:
+      tags:
+        - ambulanceCounseling
+      summary: Get all replies for a specific question
+      operationId: getRepliesByQuestionId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of replies to a specific question
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reply'
+              examples:
+                response:
+                  $ref: "#/components/examples/ReplyListExample"
+        '404':
+          description: Question not found
+  /questions/{id}/reply:
+    post:
+      tags:
+        - ambulanceCounseling
+      summary: Reply to a question
+      operationId: replyToQuestion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reply'
+            examples:
+              request:
+                $ref: "#/components/examples/ReplyExample"
+      responses:
+        '201':
+          description: Reply created successfully
+        '404':
+          description: Question not found
+        '401':
+          description: Unauthorized, user not authenticated
+  /questions/{id}/reply/{replyId}:
+    get:
+      tags:
+        - ambulanceCounseling
+      summary: Get a specific reply by ID
+      operationId: getReplyById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: replyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A specific reply to a question
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reply'
+              examples:
+                response:
+                  $ref: "#/components/examples/ReplyExample"
+        '404':
+          description: Reply not found or question not found
+  /update/question/{id}:
+    put:
+      tags:
+        - ambulanceCounseling
+      summary: Update a question by ID
+      operationId: updateQuestionById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+            examples:
+              request:
+                $ref: "#/components/examples/QuestionExample"
+      responses:
+        '200':
+          description: Question updated successfully
+        '404':
+          description: Question not found
+        '401':
+          description: Unauthorized, user not authenticated
+  /update/reply/{id}:
+    put:
+      tags:
+        - ambulanceCounseling
+      summary: Update a reply by ID
+      operationId: updateReplyById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reply'
+            examples:
+              request:
+                $ref: "#/components/examples/ReplyExample"
+      responses:
+        '200':
+          description: Reply updated successfully
+        '404':
+          description: Reply not found
+        '401':
+          description: Unauthorized, user not authenticated
+  /delete/question/{id}:
+    delete:
+      tags:
+        - ambulanceCounseling
+      summary: Delete a question by ID
+      operationId: deleteQuestionById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Question deleted successfully
+        '404':
+          description: Question not found
+        '401':
+          description: Unauthorized, user not authenticated
+  /delete/reply/{id}:
+    delete:
+      tags:
+        - ambulanceCounseling
+      summary: Delete a reply by ID
+      operationId: deleteReplyById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Reply deleted successfully
+        '404':
+          description: Reply not found
+        '401':
+          description: Unauthorized, user not authenticated
+  /login:
+    post:
+      tags:
+        - ambulanceCounselingAuth
+      summary: User login
+      operationId: userLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginForm'
+            examples:
+              request:
+                $ref: "#/components/examples/LoginFormExample"
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT token for authenticated requests
+              examples:
+                response:
+                  value:
+                    token: "your_jwt_token_here"
+        '401':
+          description: Unauthorized, invalid credentials
+        '400':
+          description: Bad request, missing or invalid input data
+  /register:
+    post:
+      tags:
+        - ambulanceCounselingAuth
+      summary: User registration
+      operationId: userRegister
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationForm'
+            examples:
+              request:
+                $ref: "#/components/examples/RegistrationFormExample"
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Bad request, invalid input data
+        '409':
+          description: Conflict, user already exists
+
+components:
+  schemas:
+    User:
+      type: object
+      required: [id, name, email, type]
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the user
+        name:
+          type: string
+          description: Name of the user
+        email:
+          type: string
+          format: email
+          description: Email address of the user
+        type:
+          type: string
+          description: Type of user (patient, doctor)
+      example:
+        $ref: '#/components/examples/UserExample'
+    Reply:
+      type: object
+      required: [id, userId, text, createdAt, repliedTo]
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the reply
+        userId:
+          type: string
+          description: Unique identifier for the user who made the reply
+        text:
+          type: string
+          description: The text of the reply
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the reply was created
+        repliedTo:
+          type: boolean
+          description: Indicates if there is another reply to the question, if true reply cannot be edited or deleted
+        doctorName:
+          type: string
+          description: If the reply is from a doctor, this field contains the doctor's name
+      example:
+        $ref: '#/components/examples/ReplyExample'
+    Question:
+      type: object
+      required: [id, patientId, summary, question, createdAt, lastUpdated, repliedTo]
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the question
+        patientId:
+          type: string
+          description: Unique identifier for the patient who submitted the question
+        summary:
+          type: string
+          description: A brief summary of the question
+        question:
+          type: string
+          description: The question text submitted by the patient
+        replies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reply'
+          description: List of replies to the question if any
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the question was created
+        lastUpdated:
+          type: string
+          format: date-time
+          description: Timestamp when the question was last updated
+        repliedTo:
+          type: boolean
+          description: Indicates if the question has been replied to, if true question cannot be edited
+      example:
+        $ref: '#/components/examples/QuestionExample'
+    LoginForm:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email address of the user
+        password:
+          type: string
+          format: password
+          description: Password for the user account
+      example:
+        $ref: '#/components/examples/LoginFormExample'
+    RegistrationForm:
+      type: object
+      required: [name, email, password]
+      properties:
+        name:
+          type: string
+          description: Name of the user
+        email:
+          type: string
+          format: email
+          description: Email address of the user
+        password:
+          type: string
+          format: password
+          description: Password for the user account
+      example:
+        $ref: '#/components/examples/RegistrationFormExample'
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Use the `Authorization` header with the `Bearer` prefix to access protected endpoints.
+        Example: `Authorization: Bearer <your_jwt_token>`
+
+  examples:
+    UserExample:
+      summary: Example of a user
+      value:
+        id: "1"
+        name: "John Doe"
+        email: "user@example.com"
+    ReplyExample:
+      summary: Example of a reply
+      value:
+        id: "1"
+        userId: "1"
+        text: "This is a reply to the question."
+        createdAt: "2023-10-01T12:00:00Z"
+        repliedTo: false
+        doctorName: "Dr. Smith"
+    QuestionExample:
+      summary: Example of a question
+      value:
+        id: "1"
+        patientId: "1"
+        summary: "General health inquiry"
+        question: "What are the symptoms of flu?"
+        replies:
+          - id: "1"
+            userId: "1"
+            text: "This is a reply to the question."
+            createdAt: "2023-10-01T12:00:00Z"
+            repliedTo: false
+            doctorName: "Dr. Smith"
+        createdAt: "2023-10-01T12:00:00Z"
+        lastUpdated: "2023-10-01T12:00:00Z"
+        repliedTo: false
+    QuestionListExample:
+      summary: Example of a list of questions
+      value:
+        - id: "1"
+          patientId: "1"
+          summary: "General health inquiry"
+          question: "What are the symptoms of flu?"
+          replies: []
+          createdAt: "2023-10-01T12:00:00Z"
+          lastUpdated: "2023-10-01T12:00:00Z"
+          repliedTo: false
+        - id: "2"
+          patientId: "2"
+          summary: "Follow-up question"
+          question: "How long does flu last?"
+          replies:
+            - id: "2"
+              userId: "2"
+              text: "Typically, flu lasts about a week."
+              createdAt: "2023-10-02T12:00:00Z"
+              repliedTo: true
+              doctorName: "Dr. Jones"
+          createdAt: "2023-10-01T12:00:00Z"
+          lastUpdated: "2023-10-01T12:00:00Z"
+    ReplyListExample:
+      summary: Example of a list of replies
+      value:
+        - id: "1"
+          userId: "1"
+          text: "This is a reply to the question."
+          createdAt: "2023-10-01T12:00:00Z"
+          repliedTo: false
+          doctorName: "Dr. Smith"
+        - id: "2"
+          userId: "2"
+          text: "This is another reply to the question."
+          createdAt: "2023-10-02T12:00:00Z"
+          repliedTo: true
+          doctorName: "Dr. Jones"
+    LoginFormExample:
+      summary: Example of a login form
+      value:
+        email: "user@example.com"
+        password: "securepassword"
+    RegistrationFormExample:
+      summary: Example of a registration form
+      value:
+        name: "John Doe"
+        email: "user@example.com"
+        password: "securepassword"
+
+
+security:
+  - bearerAuth: []

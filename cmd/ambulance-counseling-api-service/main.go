@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/akoricansky/wac-be/api"
+	"github.com/AKoricansky/wac-be-xkoricansky/api"
 	"github.com/gin-gonic/gin"
 )
 

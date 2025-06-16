@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//go:embed ambulance-wl.openapi.yaml
+//go:embed ak-ambulance-counseling-wl.openapi.yaml
 var openapiSpec []byte
 
 func HandleOpenApi(ctx *gin.Context) {
