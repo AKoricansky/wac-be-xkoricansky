@@ -1,0 +1,8 @@
+generatorName: go-gin-server
+outputDir: /local
+inputSpec: /local/api/ak-ambulance-counseling-wl.openapi.yaml
+enablePostProcessFile: true
+additionalProperties:
+  apiPath: internal/ambulance_counseling_wl
+  packageName: ambulance_counseling_wl
+  interfaceOnly: true

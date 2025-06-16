@@ -1,0 +1,10 @@
+internal/ambulance_counseling_wl/README.md
+internal/ambulance_counseling_wl/api_ambulance_counseling.go
+internal/ambulance_counseling_wl/api_ambulance_counseling_auth.go
+internal/ambulance_counseling_wl/model_login_form.go
+internal/ambulance_counseling_wl/model_question.go
+internal/ambulance_counseling_wl/model_registration_form.go
+internal/ambulance_counseling_wl/model_reply.go
+internal/ambulance_counseling_wl/model_user.go
+internal/ambulance_counseling_wl/model_user_login_200_response.go
+internal/ambulance_counseling_wl/routers.go
