@@ -43,7 +43,7 @@ func NewRouterWithGinEngine(router *gin.Engine, handleFunctions ApiHandleFunctio
 			route.HandlerFunc = DefaultHandleFunc
 		}
 
-		isPublicRoute := route.Name == "UserLogin" || route.Name == "UserRegister" || route.Name == "GetQuestions"
+		isPublicRoute := route.Name == "UserLogin" || route.Name == "UserRegister" || route.Name == "GetQuestions" || route.Name == "GetQuestionById" || route.Name == "GetRepliesByQuestionId"
 
 		var routeGroup *gin.RouterGroup
 		if isPublicRoute {

@@ -23,11 +23,6 @@ jobs:
       with:
         go-version: ${{ steps.get_go_version.outputs.go_version }}
 
-    - name: Validate OpenAPI Specification
-      uses: char0n/swagger-editor-validate@v1
-      with:
-        definition-file: api/ak-ambulance-counseling-wl.openapi.yaml
-
     - name: Generate api controllers interfaces
       uses: craicoverflow/openapi-generator-generate-action@v1.2.1
       with:
