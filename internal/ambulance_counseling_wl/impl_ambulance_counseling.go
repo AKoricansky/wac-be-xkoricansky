@@ -380,7 +380,7 @@ func (o *implAmbulanceCounselingAPI) UpdateReplyById(c *gin.Context) {
 		return
 	}
 
-	questions, err := o.questionDbService.FindDocumentsByField(ctx, "replies._id", replyId)
+	questions, err := o.questionDbService.FindDocumentsByField(ctx, "replies.id", replyId)
 	if err == nil && len(questions) > 0 {
 		for _, question := range questions {
 			for i, reply := range question.Replies {
@@ -428,7 +428,7 @@ func (o *implAmbulanceCounselingAPI) DeleteReplyById(c *gin.Context) {
 		return
 	}
 
-	questions, err := o.questionDbService.FindDocumentsByField(ctx, "replies._id", replyId)
+	questions, err := o.questionDbService.FindDocumentsByField(ctx, "replies.id", replyId)
 
 	err = o.replyDbService.DeleteDocument(ctx, replyId)
 	if err != nil {
