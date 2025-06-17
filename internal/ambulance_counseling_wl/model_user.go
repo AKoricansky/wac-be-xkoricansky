@@ -13,14 +13,17 @@ package ambulance_counseling_wl
 type User struct {
 
 	// Unique identifier for the user
-	Id string `json:"id"`
+	Id string `json:"id" bson:"id"`
 
 	// Name of the user
-	Name string `json:"name"`
+	Name string `json:"name" bson:"name"`
 
 	// Email address of the user
-	Email string `json:"email"`
+	Email string `json:"email" bson:"email"`
 
 	// Type of user (patient, doctor)
-	Type string `json:"type"`
+	Type string `json:"type" bson:"type"`
+
+	// Hashed password - not exposed in JSON responses
+	PasswordHash string `json:"-" bson:"passwordHash"`
 }

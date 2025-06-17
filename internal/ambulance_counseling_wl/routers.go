@@ -19,13 +19,13 @@ import (
 // Route is the information for every URI.
 type Route struct {
 	// Name is the name of this Route.
-	Name		string
+	Name string
 	// Method is the string for the HTTP method. ex) GET, POST etc..
-	Method		string
+	Method string
 	// Pattern is the pattern of the URI.
-	Pattern	 	string
+	Pattern string
 	// HandlerFunc is the handler function of this route.
-	HandlerFunc	gin.HandlerFunc
+	HandlerFunc gin.HandlerFunc
 }
 
 // NewRouter returns a new router.
@@ -35,28 +35,40 @@ func NewRouter(handleFunctions ApiHandleFunctions) *gin.Engine {
 
 // NewRouter add routes to existing gin engine.
 func NewRouterWithGinEngine(router *gin.Engine, handleFunctions ApiHandleFunctions) *gin.Engine {
+	protected := router.Group("/")
+	protected.Use(JWTAuthMiddleware())
+
 	for _, route := range getRoutes(handleFunctions) {
 		if route.HandlerFunc == nil {
 			route.HandlerFunc = DefaultHandleFunc
 		}
+
+		isPublicRoute := route.Name == "UserLogin" || route.Name == "UserRegister" || route.Name == "GetQuestions"
+
+		var routeGroup *gin.RouterGroup
+		if isPublicRoute {
+			routeGroup = &router.RouterGroup
+		} else {
+			routeGroup = protected
+		}
+
 		switch route.Method {
 		case http.MethodGet:
-			router.GET(route.Pattern, route.HandlerFunc)
+			routeGroup.GET(route.Pattern, route.HandlerFunc)
 		case http.MethodPost:
-			router.POST(route.Pattern, route.HandlerFunc)
+			routeGroup.POST(route.Pattern, route.HandlerFunc)
 		case http.MethodPut:
-			router.PUT(route.Pattern, route.HandlerFunc)
+			routeGroup.PUT(route.Pattern, route.HandlerFunc)
 		case http.MethodPatch:
-			router.PATCH(route.Pattern, route.HandlerFunc)
+			routeGroup.PATCH(route.Pattern, route.HandlerFunc)
 		case http.MethodDelete:
-			router.DELETE(route.Pattern, route.HandlerFunc)
+			routeGroup.DELETE(route.Pattern, route.HandlerFunc)
 		}
 	}
 
 	return router
 }
 
-// Default handler for not yet implemented routes
 func DefaultHandleFunc(c *gin.Context) {
 	c.String(http.StatusNotImplemented, "501 not implemented")
 }
@@ -70,7 +82,7 @@ type ApiHandleFunctions struct {
 }
 
 func getRoutes(handleFunctions ApiHandleFunctions) []Route {
-	return []Route{ 
+	return []Route{
 		{
 			"CreateQuestion",
 			http.MethodPost,
@@ -80,19 +92,19 @@ func getRoutes(handleFunctions ApiHandleFunctions) []Route {
 		{
 			"DeleteQuestionById",
 			http.MethodDelete,
-			"/ak-ambulance-counseling-api/delete/question/:id",
+			"/ak-ambulance-counseling-api/delete/question/:questionId",
 			handleFunctions.AmbulanceCounselingAPI.DeleteQuestionById,
 		},
 		{
 			"DeleteReplyById",
 			http.MethodDelete,
-			"/ak-ambulance-counseling-api/delete/reply/:id",
+			"/ak-ambulance-counseling-api/delete/reply/:replyId",
 			handleFunctions.AmbulanceCounselingAPI.DeleteReplyById,
 		},
 		{
 			"GetQuestionById",
 			http.MethodGet,
-			"/ak-ambulance-counseling-api/questions/:id",
+			"/ak-ambulance-counseling-api/questions/:questionId",
 			handleFunctions.AmbulanceCounselingAPI.GetQuestionById,
 		},
 		{
@@ -104,31 +116,31 @@ func getRoutes(handleFunctions ApiHandleFunctions) []Route {
 		{
 			"GetRepliesByQuestionId",
 			http.MethodGet,
-			"/ak-ambulance-counseling-api/questions/:id/replies",
+			"/ak-ambulance-counseling-api/questions/:questionId/replies",
 			handleFunctions.AmbulanceCounselingAPI.GetRepliesByQuestionId,
 		},
 		{
 			"GetReplyById",
 			http.MethodGet,
-			"/ak-ambulance-counseling-api/questions/:id/reply/:replyId",
+			"/ak-ambulance-counseling-api/questions/:questionId/reply/:replyId",
 			handleFunctions.AmbulanceCounselingAPI.GetReplyById,
 		},
 		{
 			"ReplyToQuestion",
 			http.MethodPost,
-			"/ak-ambulance-counseling-api/questions/:id/reply",
+			"/ak-ambulance-counseling-api/questions/:questionId/reply",
 			handleFunctions.AmbulanceCounselingAPI.ReplyToQuestion,
 		},
 		{
 			"UpdateQuestionById",
 			http.MethodPut,
-			"/ak-ambulance-counseling-api/update/question/:id",
+			"/ak-ambulance-counseling-api/update/question/:questionId",
 			handleFunctions.AmbulanceCounselingAPI.UpdateQuestionById,
 		},
 		{
 			"UpdateReplyById",
 			http.MethodPut,
-			"/ak-ambulance-counseling-api/update/reply/:id",
+			"/ak-ambulance-counseling-api/update/reply/:replyId",
 			handleFunctions.AmbulanceCounselingAPI.UpdateReplyById,
 		},
 		{
