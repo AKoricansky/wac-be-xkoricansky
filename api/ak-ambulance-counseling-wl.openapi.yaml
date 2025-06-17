@@ -5,7 +5,7 @@ servers:
 info:
   description: Ambulance Counseling Project API
   version: "1.0.0"
-  title: Waiting List Api
+  title: Counseling API
   contact:
     email: xkoricansky@stuba.sk
   license:

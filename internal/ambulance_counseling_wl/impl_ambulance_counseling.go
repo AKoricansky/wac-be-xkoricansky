@@ -144,7 +144,7 @@ func (o *implAmbulanceCounselingAPI) DeleteQuestionById(c *gin.Context) {
 	}
 
 	ctx := context.Background()
-	existingQuestion, err := o.questionDbService.FindDocument(ctx, id)
+	_, err := o.questionDbService.FindDocument(ctx, id)
 	if err != nil {
 		if err == db_service.ErrNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Question not found"})

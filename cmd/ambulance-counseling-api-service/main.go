@@ -67,5 +67,6 @@ func main() {
 	ambulance_counseling_wl.NewRouterWithGinEngine(engine, *handleFunctions)
 
 	engine.GET("/openapi", api.HandleOpenApi)
+	api.RegisterSwaggerRoutes(engine)
 	engine.Run(":" + port)
 }
