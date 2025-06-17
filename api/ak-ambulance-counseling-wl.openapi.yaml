@@ -333,6 +333,10 @@ components:
         type:
           type: string
           description: Type of user (patient, doctor)
+        passwordHash:
+          type: string
+          description: Hashed password for authentication (not exposed in responses)
+          x-go-json-ignore: true
       example:
         $ref: '#/components/examples/UserExample'
     Reply:
